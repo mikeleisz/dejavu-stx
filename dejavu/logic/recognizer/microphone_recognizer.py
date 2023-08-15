@@ -29,15 +29,21 @@ class MicrophoneRecognizer(BaseRecognizer):
         self.recorded = False
         self.samplerate = samplerate
 
+        print(f'Num audio devices: {self.audio.get_device_count()}')
+        for i in range(self.audio.get_device_count()):
+            dev = self.audio.get_device_info_by_index(i)
+            print((i, dev['name'], dev['maxInputChannels']))
+
         if self.stream:
             self.stream.stop_stream()
             self.stream.close()
 
         self.stream = self.audio.open(
             format=self.default_format,
-            channels=channels,
+            channels=1,
             rate=samplerate,
             input=True,
+            input_device_index=1,
             frames_per_buffer=chunksize,
         )
 
